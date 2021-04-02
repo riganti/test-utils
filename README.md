@@ -1,5 +1,5 @@
 # selenium-utils
-**The purpose of this framework is to make UI testing much more easier and cheaper.**
+**The purpose of this framework is to make UI testing much easier and cheaper.**
 Framework is based on selenium wrappers and principles which canopy uses. 
 
 
@@ -12,7 +12,7 @@ We created types of 3 APIs.
  - LambdaAPI - *just concept - not implemented*
 
  ## Assert API
- Assert API uses concept of one assertation on one line. This approach has its own advantages when you need to quickly navigate between stack trace and source code. 
+ Assert API uses concept of one assertion on one line. This approach has its own advantages when you need to quickly navigate between stack trace and source code. 
   
  ```
  AssertUI.InnerTextEquals(element, "expected value", "Custom error message.");
@@ -26,7 +26,7 @@ element.CheckIfInnerTextEquals("value", ...).CheckHasAttribute("data-custom");
 ```
 
 ## Lambda API 
-Lambda API is a theoretical concept for now. It is compromis between AsertApi and FluentApi. 
+Lambda API is a theoretical concept for now. It is a compromise between AssertApi and FluentApi. 
 
 ```
     browser.First("#button").Check().InnerText(s => s.Contains("text"));
