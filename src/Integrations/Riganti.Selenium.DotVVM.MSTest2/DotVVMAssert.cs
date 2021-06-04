@@ -16,24 +16,50 @@ namespace Riganti.Selenium.DotVVM
             if (element.BrowserWrapper.IsDotvvmPage())
             {
                 element.BrowserWrapper.LogVerbose("Selenium.DotVVM : Uploading file");
-                var name = element.GetTagName();
-                if (name == "a" && element.HasAttribute("onclick") && (element.GetAttribute("onclick")?.Contains("showUploadDialog") ?? false))
-                {
-                    UploadFileByA(element, fullFileName);
-                    return;
-                }
+                var isLessThenDotvvm30 = element.BrowserWrapper.GetJavaScriptExecutor()
+                 .ExecuteScript("return !!(window[\"dotvvm\"] && dotvvm && dotvvm.fileUpload && dotvvm.fileUpload.createUploadId )|| false") as bool? ?? false;
 
-                if (name == "div" && element.FindElements("iframe", SelectBy.CssSelector).Count == 1)
+                if (isLessThenDotvvm30)
                 {
-                    UploadFileByDiv(element, fullFileName);
-                    return;
+                    element.BrowserWrapper.LogVerbose("Selenium.DotVVM : Uploading file");
+                    var name = element.GetTagName();
+                    if (name == "a" && element.HasAttribute("onclick") && (element.GetAttribute("onclick")?.Contains("showUploadDialog") ?? false))
+                    {
+                        UploadFileByA(element, fullFileName);
+                        return;
+                    }
+
+                    if (name == "div" && element.FindElements("iframe", SelectBy.CssSelector).Count == 1)
+                    {
+                        UploadFileByDiv(element, fullFileName);
+                        return;
+                    }
+                    else
+                    {
+                        element.BrowserWrapper.LogVerbose("Selenium.DotVVM : Cannot identify DotVVM scenario. Uploading over standard procedure.");
+
+                        element.BrowserWrapper.OpenInputFileDialog(element, fullFileName);
+                        return;
+                    }
                 }
                 else
                 {
-                    element.BrowserWrapper.LogVerbose("Selenium.DotVVM : Cannot identify DotVVM scenario. Uploading over standard procedure.");
+                    var name = element.GetTagName();
+                    if (name == "a" && element.HasAttribute("onclick") && (element.GetAttribute("onclick")?.Contains("showUploadDialog") ?? false))
+                    {
+                        element = element.ParentElement.ParentElement;
+                    }
 
-                    element.BrowserWrapper.OpenInputFileDialog(element, fullFileName);
-                    return;
+                    if (element.GetTagName() == "div")
+                    {
+                        var fileInput = element.Single("input[type=file]");
+                        fileInput.SendKeys(fullFileName);
+
+                        element.Wait(element.ActionWaitTime);
+                        return;
+                    }
+
+                    element.BrowserWrapper.LogVerbose("Selenium.DotVVM : Cannot identify DotVVM scenario. Uploading over standard procedure.");
                 }
             }
 
@@ -54,7 +80,7 @@ namespace Riganti.Selenium.DotVVM
 
             element.Wait(element.ActionWaitTime);
             element.ActivateScope();
-            
+
         }
 
         private static void UploadFileByA(IElementWrapper element, string fullFileName)

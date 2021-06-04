@@ -11,6 +11,7 @@ namespace Riganti.Selenium.Core.Samples.FluentApi.Tests
     [TestClass]
     public class UrlTests : SeleniumTest
     {
+        [TestMethod]
         public void Url_CheckHyperLink_Relative()
         {
             this.RunInAllBrowsers(browser =>
@@ -26,7 +27,8 @@ namespace Riganti.Selenium.Core.Samples.FluentApi.Tests
                 browser.CheckIfHyperLinkEquals("#RelativeLink", "path/test?query=test#fragmentasd", UrlKind.Relative,
                     UriComponents.PathAndQuery);
                 browser.CheckIfHyperLinkEquals("#RelativeLink", "path/test?query=test#fragment", UrlKind.Relative,
-                    UriComponents.PathAndQuery);
+                    UriComponents.PathAndQuery); 
+                browser.CheckIfHyperLinkEquals("#RelativeLink", "path/test", UrlKind.Relative,UriComponents.Path);
             });
         }
 

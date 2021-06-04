@@ -59,8 +59,6 @@ namespace Riganti.Selenium.Core.Factories
             }
         }
 
-
-
         protected abstract IWebBrowser CreateBrowser();
 
         protected virtual void DisposeBrowser(IWebBrowser browser)

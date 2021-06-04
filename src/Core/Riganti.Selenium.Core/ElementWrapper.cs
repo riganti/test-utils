@@ -13,13 +13,14 @@ using Riganti.Selenium.Core.Api;
 using Riganti.Selenium.Validators.Checkers;
 using Riganti.Selenium.Validators.Checkers.ElementWrapperCheckers;
 using Riganti.Selenium.Core.Comparators;
+using System.Collections.Generic;
 
 namespace Riganti.Selenium.Core
 {
     /// <inheritdoc />
     public class ElementWrapper : IElementWrapper
     {
-        protected readonly IWebElement element;
+        protected readonly Func<IWebElement> element;
         protected readonly IBrowserWrapper browser;
 
         /// <inheritdoc cref="IElementWrapper.Selector"/>
@@ -47,7 +48,7 @@ namespace Riganti.Selenium.Core
             get
             {
                 ParentWrapper.ActivateScope();
-                return element;
+                return element();
             }
         }
 
@@ -99,11 +100,11 @@ namespace Riganti.Selenium.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementWrapper"/> class.
         /// </summary>
-        /// <param name="webElement">The web element.</param>
+        /// <param name="webElementSelector">The web element.</param>
         /// <param name="browserWrapper">The browser wrapper.</param>
-        public ElementWrapper(IWebElement webElement, IBrowserWrapper browserWrapper)
+        public ElementWrapper(Func<IWebElement> webElementSelector, IBrowserWrapper browserWrapper)
         {
-            element = webElement;
+            element = webElementSelector;
             browser = browserWrapper;
             SelectMethod = browser.SelectMethod;
             BaseUrl = browser.BaseUrl;
@@ -301,7 +302,6 @@ return false;
         {
             var selectElm = new SelectElement(WebElement);
             process(selectElm);
-            Wait();
             return this;
         }
 
@@ -322,14 +322,12 @@ return false;
         public virtual IElementWrapper Submit()
         {
             WebElement.Submit();
-            Wait();
             return this;
         }
 
         public virtual IElementWrapper SendKeys(string text)
         {
             WebElement.SendKeys(text);
-            Wait();
             return this;
         }
 
@@ -341,7 +339,10 @@ return false;
         /// <returns></returns>
         public virtual IElementWrapperCollection<IElementWrapper, IBrowserWrapper> FindElements(string selector, Func<string, By> tmpSelectMethod = null)
         {
-            var collection = WebElement.FindElements((tmpSelectMethod ?? SelectMethod)(selector)).ToElementsList<IElementWrapper, IBrowserWrapper>(browser, selector, this, browser.ServiceFactory);
+            var usedSelectMethod = tmpSelectMethod ?? SelectMethod;
+            var collection = Extensions.ToElementsList<IElementWrapper, IBrowserWrapper>(
+                                                       () => WebElement.FindElements(usedSelectMethod(selector)),
+                                                       browser, selector, usedSelectMethod, this, browser.ServiceFactory);
             collection.ParentWrapper = this;
             return collection;
         }
@@ -439,7 +440,6 @@ return false;
         public virtual IElementWrapper Click()
         {
             WebElement.Click();
-            Wait();
             return this;
         }
 
@@ -518,7 +518,6 @@ return false;
         public IElementWrapper Clear()
         {
             WebElement.Clear();
-            Wait();
             return this;
         }
         /// <summary>
@@ -534,10 +533,10 @@ return false;
                 .KeyUp(Keys.Shift)
                 .SendKeys(Keys.Backspace)
                 .Perform();
-            Wait();
             return this;
         }
 
+        [Obsolete("Please use WaitFor or specify exact timeout.")]
         public virtual IElementWrapper Wait()
         {
             if (ActionWaitTime != 0)
@@ -545,7 +544,7 @@ return false;
             return this;
         }
 
-   
+
         public virtual IElementWrapper Wait(int milliseconds)
         {
             Thread.Sleep(milliseconds);
@@ -612,6 +611,31 @@ return false;
             }, maxTimeout, failureMessage, true, checkInterval);
         }
 
+        public IElementWrapper WaitFor(Func<IElementWrapper, IElementWrapper> selector, WaitForOptions options = null)
+        {
+            IElementWrapper wrapper = null;
+            WaitForExecutor.WaitFor(() =>
+            {
+                wrapper = selector(this);
+                if (wrapper is null) throw new ElementNotFoundException();
+            }, options);
+
+            return wrapper;
+        }
+
+        public IElementWrapperCollection<IElementWrapper, IBrowserWrapper> WaitFor(Func<IElementWrapper, IElementWrapperCollection<IElementWrapper, IBrowserWrapper>> selector, WaitForOptions options = null)
+        {
+            IElementWrapperCollection<IElementWrapper, IBrowserWrapper> wrappers = null;
+            WaitForExecutor.WaitFor(() =>
+            {
+                wrappers = selector(this);
+                if (wrappers is null) throw new ElementNotFoundException();
+            }, options);
+
+            return wrappers;
+        }
+
+
         /// <summary>
         /// Waits the specified time before next step.
         /// </summary>
@@ -622,7 +646,7 @@ return false;
         }
 
 
-        public IElementWrapper ScrollTo()
+        public IElementWrapper ScrollTo(WaitForOptions waitForOptions = null)
         {
             var javascript = @"
             function findPosition(element) {
@@ -638,10 +662,21 @@ return false;
             window.scroll(0,findPosition(arguments[0]));
         ";
             var executor = browser.GetJavaScriptExecutor();
-            executor.ExecuteScript(javascript, element);
+            executor.ExecuteScript(javascript, WaitForInternalElement(waitForOptions));
             return this;
         }
 
+        private IWebElement WaitForInternalElement(WaitForOptions waitForOptions)
+        {
+            IWebElement elm = null;
+            var w = new WaitForExecutor();
+            w.WaitFor(() =>
+            {
+                elm = element();
+                return elm != null;
+            }, waitForOptions);
+            return elm;
+        }
 
         public bool IsElementInView(IElementWrapper element)
         {

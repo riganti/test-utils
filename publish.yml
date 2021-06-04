@@ -1,3 +1,4 @@
+trigger: none 
 pool:
    name: 'FERRARI_AP01'
 
@@ -27,3 +28,11 @@ steps:
   inputs:
     solution: '**\*.Selenium.MSTestIntegration.csproj'
     maximumCpuCount: true
+
+- task: PowerShell@2
+  displayName: publish
+  inputs:
+    targetType: filePath
+    filePath: '$(System.DefaultWorkingDirectory)\src\tools\publish.ps1 '
+    arguments: '-source $(source) -key $(apikey)'
+    workingDirectory: 'src\tools'

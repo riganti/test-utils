@@ -1,16 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="**/*.dothtml;**/*.dotmaster;**/*.dotcontrol" Exclude="obj/**/*.*;bin/**/*.*" CopyToPublishDirectory="Always" />
+    <Compile Remove="temp\**" />
+    <Content Remove="temp\**" />
+    <EmbeddedResource Remove="temp\**" />
     <None Remove="**/*.dothtml;**/*.dotmaster;**/*.dotcontrol" />
+    <None Remove="temp\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="dotvvm_serialized_config.json.tmp" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotVVM.AspNetCore" Version="3.0.0-preview01-91918-alpha03" />
-
+    <PackageReference Include="DotVVM.AspNetCore" Version="3.0.3" />
   </ItemGroup>
 </Project>

@@ -22,8 +22,4 @@ namespace Riganti.Selenium.Core
             return new TestSuiteRunner(configuration, testContextProvider);
         }
     }
-
-    public class AssemblyCleanupProvider
-    {
-    }
 }

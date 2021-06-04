@@ -63,7 +63,7 @@ namespace Riganti.Selenium.Core
         new IElementWrapperFluentApi Last(string selector, Func<string, By> tmpSelectMethod = null);
         new IElementWrapperFluentApi LastOrDefault(string selector, Func<string, By> tmpSelectMethod = null);
         new IElementWrapperFluentApi PerformActionOnSelectElement(Action<SelectElement> process);
-        new IElementWrapperFluentApi ScrollTo();
+        new IElementWrapperFluentApi ScrollTo(WaitForOptions waitForOptions = null);
         new IElementWrapperFluentApi Select(Action<SelectElement> process);
         new IElementWrapperFluentApi Select(int index);
         new IElementWrapperFluentApi Select(string value);

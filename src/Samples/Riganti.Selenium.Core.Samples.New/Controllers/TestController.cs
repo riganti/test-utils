@@ -49,6 +49,7 @@ namespace Riganti.Selenium.Core.Samples.New.Controllers
         public ActionResult Index() { return View(null); }
         public ActionResult Focus() { return View(null); }
         public ActionResult JsView() { return View(null); }
+        public ActionResult ScrollTo() { return View(null); }
         public ActionResult SelectMethod() { return View(null); }
         public ActionResult TemporarySelector() { return View(null); }
         public ActionResult Text() { return View(null); }

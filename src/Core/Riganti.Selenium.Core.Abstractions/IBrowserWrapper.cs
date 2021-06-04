@@ -186,5 +186,7 @@ namespace Riganti.Selenium.Core.Abstractions
         /// This method can be used only for operations that do NOT use DOM.
         /// </summary>
         IWebDriver _GetInternalWebDriver();
+        IElementWrapper WaitFor(Func<IBrowserWrapper, IElementWrapper> selector, WaitForOptions options = null);
+        IElementWrapperCollection<IElementWrapper, IBrowserWrapper> WaitFor(Func<IBrowserWrapper, IElementWrapperCollection<IElementWrapper, IBrowserWrapper>> selector, WaitForOptions options = null);
     }
 }

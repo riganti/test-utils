@@ -14,7 +14,7 @@ namespace Riganti.Selenium.Core.Samples.AssertApi.Tests
         public BrowserLoggingTests(ITestOutputHelper output) : base(output)
         {
         }
-        [Fact]
+        [Fact(Skip = "Internal WebDriver API is corrupted.")]
         public void Tests()
         {
             RunInAllBrowsers(browser =>
@@ -22,9 +22,7 @@ namespace Riganti.Selenium.Core.Samples.AssertApi.Tests
                 browser.NavigateToUrl("http://localhost:7190/");
                 var logs = browser.Driver.Manage().Logs.GetLog(LogType.Browser);
                 var driverLogs = browser.Driver.Manage().Logs.GetLog(LogType.Driver);
-
             });
-
         }
     }
 }   

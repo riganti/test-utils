@@ -76,14 +76,14 @@ namespace Selenium.Core.UnitTests
         [TestMethod, Timeout(5000), ExpectedException(typeof(WaitBlockException), AllowDerivedTypes = true)]
         public void ElementWaitForTimeoutTest()
         {
-            var element = new ElementWrapper(new MockIWebElement(), browser);
+            var element = new ElementWrapper(() => new MockIWebElement(), browser);
             element.WaitFor(elm => false, 2000, "test timeouted");
         }
 
         [TestMethod, Timeout(5000), ExpectedException(typeof(WaitBlockException), AllowDerivedTypes = true)]
         public void ElementWaitForTimeoutTest2()
         {
-            var element = new ElementWrapper(new MockIWebElement(), browser);
+            var element = new ElementWrapper(() => new MockIWebElement(), browser);
             var i = 0;
             element.WaitFor(elm => i++ == 5, 2000, "test timeouted", checkInterval: 800);
         }
@@ -91,7 +91,7 @@ namespace Selenium.Core.UnitTests
         [TestMethod, Timeout(5000)]
         public void ElementWaitForTimeoutTest4()
         {
-            var element = new ElementWrapper(new MockIWebElement(), browser);
+            var element = new ElementWrapper(() => new MockIWebElement(), browser);
             var i = 0;
             element.WaitFor(elm => i++ == 5, 2000, "test timeouted", checkInterval: 100);
         }
@@ -99,7 +99,7 @@ namespace Selenium.Core.UnitTests
         [TestMethod, Timeout(5000), ExpectedException(typeof(WaitBlockException), AllowDerivedTypes = true)]
         public void ElementWaitForTimeoutTest5()
         {
-            var element = new ElementWrapper(new MockIWebElement(), browser);
+            var element = new ElementWrapper(() => new MockIWebElement(), browser);
             element.WaitFor((elm) =>
             {
                 var valueValidator = new ValueValidator("asdasdasdasd");
@@ -112,7 +112,7 @@ namespace Selenium.Core.UnitTests
         [TestMethod, Timeout(5000)]
         public void ElementWaitForTimeoutTest6()
         {
-            var element = new ElementWrapper(new MockIWebElement(), browser);
+            var element = new ElementWrapper(() => new MockIWebElement(), browser);
             var i = 0;
             element.WaitFor((elm) =>
             {

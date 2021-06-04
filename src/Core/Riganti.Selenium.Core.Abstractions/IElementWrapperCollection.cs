@@ -7,7 +7,7 @@ namespace Riganti.Selenium.Core.Abstractions
     public interface IElementWrapperCollection<TElement, TBrowser> : ISeleniumWrapperCollection,
         IReadOnlyCollection<TElement> where TElement : IElementWrapper where TBrowser : IBrowserWrapper
     {
-        TElement this[int index] { get; set; }
+        TElement this[int index] { get; }
 
         TBrowser BrowserWrapper { get; set; }
         bool IsReadOnly { get; }

@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <IncludeSymbols>True</IncludeSymbols>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.7</AssemblyVersion>
-    <FileVersion>2.0.7</FileVersion>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
     <Description>Integration of Riganti.Selenium.DotVVM for DotVVM Framework.</Description>
-    <Version>2.0.7</Version>
+    <Version>3.0.0-preview08-final</Version>
     <PackageProjectUrl>https://github.com/riganti/selenium-utils</PackageProjectUrl>
     <RepositoryUrl>https://github.com/riganti/selenium-utils</RepositoryUrl>
     <PackageTags>selenium ui tests riganti ci dotvvm</PackageTags>

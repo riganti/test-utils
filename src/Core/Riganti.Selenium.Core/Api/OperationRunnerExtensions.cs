@@ -230,13 +230,26 @@ namespace Riganti.Selenium.Core.Api
 
         public static void HasClass(this IOperationRunner<IElementWrapper> operationRunner, string value, bool caseSensitive = false)
         {
-            operationRunner.Attribute("class", p => p.Split(' ').Any(c => string.Equals(c, value,
+            operationRunner.Attribute("class",
+                p =>
+#if NET5_0_OR_GREATER
+                p.Split(' ', StringSplitOptions.None)
+#else
+                p.Split(' ')
+#endif
+                .Any(c => string.Equals(c, value,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase)), $"Expected value: '{value}'.");
         }
 
         public static void HasNotClass(this IOperationRunner<IElementWrapper> operationRunner, string value, bool caseSensitive = false)
         {
-            operationRunner.Attribute("class", p => !p.Split(' ').Select(s => s.Trim()).Any(c => string.Equals(c, value,
+            operationRunner.Attribute("class", p => !p.
+#if NET5_0_OR_GREATER
+            Split(' ', StringSplitOptions.None)
+#else
+            Split(' ')
+#endif
+            .Select(s => s.Trim()).Any(c => string.Equals(c, value,
                  caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase)), $"Expected value: '{value}'.");
         }
 

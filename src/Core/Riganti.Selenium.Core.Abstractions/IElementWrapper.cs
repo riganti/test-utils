@@ -5,9 +5,6 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Riganti.Selenium.Core.Abstractions
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IElementWrapper : ISeleniumWrapper, ISupportedByValidator
     {
         /// <summary>
@@ -120,7 +117,7 @@ namespace Riganti.Selenium.Core.Abstractions
         IElementWrapper Last(string selector, Func<string, By> tmpSelectMethod = null);
         IElementWrapper LastOrDefault(string selector, Func<string, By> tmpSelectMethod = null);
         IElementWrapper PerformActionOnSelectElement(Action<SelectElement> process);
-        IElementWrapper ScrollTo();
+        IElementWrapper ScrollTo(WaitForOptions waitForOptions = null);
         IElementWrapper Select(Action<SelectElement> process);
 
         /// <summary>
@@ -151,6 +148,7 @@ namespace Riganti.Selenium.Core.Abstractions
         /// <summary>
         /// Stops execution for time specified in ActionWaitTime.
         /// </summary>
+        [Obsolete("Please use WaitFor or exact timeout.")]
         IElementWrapper Wait();
 
         /// <summary>
@@ -178,5 +176,7 @@ namespace Riganti.Selenium.Core.Abstractions
 
         IElementWrapper WaitFor(Func<IElementWrapper, bool> condition, int maxTimeout, string failureMessage,
             bool ignoreCertainException = true, int checkInterval = 30);
+        IElementWrapperCollection<IElementWrapper, IBrowserWrapper> WaitFor(Func<IElementWrapper, IElementWrapperCollection<IElementWrapper, IBrowserWrapper>> selector, WaitForOptions options = null);
+        IElementWrapper WaitFor(Func<IElementWrapper, IElementWrapper> selector, WaitForOptions options = null);
     }
 }

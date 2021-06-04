@@ -1,6 +1,7 @@
 ﻿{
   "factories": {
-    "chrome:fast": {},
+    "chrome:fast": {
+    },
     //"firefox:fast": {}
     //"chrome:coordinator": {
     //  "options": {
@@ -9,7 +10,7 @@
     //}
   },
   "baseUrls": [
-    "http://localhost:7190/"
+    "http://localhost:5000/"
   ],
   "testRunOptions": {
     "runInParallel": false,

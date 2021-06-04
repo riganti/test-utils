@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.0;</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp3.0;net5.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
-    <Version>2.0.7</Version>
+    <Version>3.0.0-preview08-final</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Company>Riganti s.r.o.</Company>
+    <Company>RIGANTI s.r.o.</Company>
     <Authors>Ladislav Šesták</Authors>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
@@ -18,9 +18,11 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PackageReference Include="Xunit.Extensions.AssemblyFixture" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

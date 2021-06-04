@@ -33,11 +33,11 @@ namespace Riganti.Selenium.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Core.ElementWrapper"/> class.
         /// </summary>
-        /// <param name="webElement">The web element.</param>
+        /// <param name="webElementSelector">The selector that gets web element.</param>
         /// <param name="browserWrapper">The browser wrapper.</param>
         /// <param name="selector">The selector.</param>
-        public ElementWrapperFluentApi(IWebElement webElement, IBrowserWrapper browserWrapper)
-            : base(webElement, browserWrapper)
+        public ElementWrapperFluentApi(Func<IWebElement> webElementSelector, IBrowserWrapper browserWrapper)
+            : base(webElementSelector, browserWrapper)
         {
         }
 
@@ -91,7 +91,7 @@ namespace Riganti.Selenium.Core
         }
 
 
-    
+
 
         /// <summary>
         /// Checks if this element contains other element(s) selected by <see cref="cssSelector"/>.
@@ -336,14 +336,12 @@ namespace Riganti.Selenium.Core
         public new virtual IElementWrapperFluentApi Submit()
         {
             WebElement.Submit();
-            Wait();
             return this;
         }
 
         public new virtual IElementWrapperFluentApi SendKeys(string text)
         {
             WebElement.SendKeys(text);
-            Wait();
             return this;
         }
 
@@ -355,7 +353,10 @@ namespace Riganti.Selenium.Core
         /// <returns></returns>
         public new virtual IElementWrapperCollection<IElementWrapperFluentApi, IBrowserWrapperFluentApi> FindElements(string selector, Func<string, By> tmpSelectMethod = null)
         {
-            var collection = WebElement.FindElements((tmpSelectMethod ?? SelectMethod)(selector)).ToElementsList<IElementWrapperFluentApi, IBrowserWrapperFluentApi>((IBrowserWrapperFluentApi)browser, selector, this, browser.ServiceFactory);
+            var usedSelectMethod = (tmpSelectMethod ?? SelectMethod);
+            var collection = Extensions.ToElementsList<IElementWrapperFluentApi, IBrowserWrapperFluentApi>(
+                () => WebElement.FindElements(usedSelectMethod(selector)),
+                (IBrowserWrapperFluentApi)browser, selector, usedSelectMethod, this, browser.ServiceFactory);
             collection.ParentWrapper = this;
             return collection;
         }
@@ -511,6 +512,7 @@ namespace Riganti.Selenium.Core
         /// <summary>
         /// Waits the ActionWaitTime before next step.
         /// </summary>
+        [Obsolete("Please use WaitFor or specify exact timeout.")]
         public new virtual IElementWrapperFluentApi Wait()
         {
             return (IElementWrapperFluentApi)base.Wait();
@@ -567,9 +569,9 @@ namespace Riganti.Selenium.Core
         }
 
         /// <inheritdoc cref="IElementWrapper.ScrollTo()" />
-        public new IElementWrapperFluentApi ScrollTo()
+        public new IElementWrapperFluentApi ScrollTo(WaitForOptions waitForOptions = null)
         {
-            return (IElementWrapperFluentApi)base.ScrollTo();
+            return (IElementWrapperFluentApi)base.ScrollTo(waitForOptions);
         }
 
         public IElementWrapperFluentApi CheckIfIsElementInView(IElementWrapperFluentApi element)

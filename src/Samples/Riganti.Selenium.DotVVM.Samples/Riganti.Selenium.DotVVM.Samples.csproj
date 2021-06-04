@@ -1,6 +1,6 @@
-<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Riganti.Selenium.DotVVM.Samples</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
@@ -27,9 +27,10 @@
         <Folder Include="wwwroot\" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore" Version="2.1.4" />
-        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
-        <PackageReference Include="DotVVM.AspNetCore" Version="2.1.0-preview01-34881" />
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+      <PackageReference Include="DotVVM.AspNetCore" Version="2.5.2" />
     </ItemGroup>
     <ItemGroup>
         <DotNetCliToolReference Include="DotVVM.Compiler.Light" Version="1.1.5" />

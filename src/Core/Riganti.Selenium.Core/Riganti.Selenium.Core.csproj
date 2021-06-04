@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461;net5.0</TargetFrameworks>
 
     <AssemblyName>Riganti.Selenium.Core</AssemblyName>
     <ApplicationIcon></ApplicationIcon>
-    <AssemblyVersion>2.0.7</AssemblyVersion>
     <IncludeContentInPack>False</IncludeContentInPack>
     <IncludeSymbols>True</IncludeSymbols>
-    <FileVersion>2.0.7</FileVersion>
+    <LangVersion>9.0</LangVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <Description>Basic utilities for performing UI tests based on selenium on CI servers.</Description>
     <Company>RIGANTI s.r.o.</Company>
     <Authors>Ladislav Šesták</Authors>
-    <Version>2.0.7</Version>
+    <Version>3.0.0-preview08-final</Version>
     <RepositoryUrl>https://github.com/riganti/selenium-utils</RepositoryUrl>
     <RepositoryType></RepositoryType>
     <PackageTags>selenium ui tests riganti ci</PackageTags>
@@ -46,6 +46,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;netcoreapp20</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;net50</DefineConstants>
   </PropertyGroup>
 
 

@@ -6,31 +6,22 @@ Framework is based on selenium wrappers and principles which canopy uses.
 
 # APIs
 
-We created types of 3 APIs. 
+We created types of 2 APIs. 
  - AssertAPI
- - FluentAPI
- - LambdaAPI - *just concept - not implemented*
+ - FluentAPI - discontinued due to lack of interest.
 
  ## Assert API
- Assert API uses concept of one assertation on one line. This approach has its own advantages when you need to quickly navigate between stack trace and source code. 
+ Assert API uses concept of one assertation on one line. This approach has big  advantage when you need to quickly navigate between stack trace and source code. 
   
  ```
  AssertUI.InnerTextEquals(element, "expected value", "Custom error message.");
  ``` 
 
-## Fluent API
+## Fluent API (discontinued)
 Fluent API is perfect for really simple tests. You can stack more checking methods in a row. 
 
 ```
 element.CheckIfInnerTextEquals("value", ...).CheckHasAttribute("data-custom");
-```
-
-## Lambda API 
-Lambda API is a theoretical concept for now. It is compromis between AsertApi and FluentApi. 
-
-```
-    browser.First("#button").Check().InnerText(s => s.Contains("text"));
-    browser.First("#input").Check().Tag(s => s.Contains("input"));
 ```
 
 ## Configuration

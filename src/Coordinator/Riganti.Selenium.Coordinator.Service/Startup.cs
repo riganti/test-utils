@@ -72,8 +72,10 @@ namespace Riganti.Selenium.Coordinator.Service
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             this.ServiceProvider = app.ApplicationServices;
+
+
             // use SignalR
-            app.UseSignalR(options =>
+            app.UseEndpoints(options =>
             {
                 options.MapHub<LogHub>("/log");
             });

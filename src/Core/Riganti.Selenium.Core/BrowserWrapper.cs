@@ -15,6 +15,8 @@ using Riganti.Selenium.Validators.Checkers;
 using Riganti.Selenium.Core.Configuration;
 using Riganti.Selenium.Core;
 using Riganti.Selenium.Validators.Checkers.ElementWrapperCheckers;
+using System.Net.Http;
+using System.Collections.Generic;
 
 namespace Riganti.Selenium.Core
 {
@@ -381,7 +383,7 @@ namespace Riganti.Selenium.Core
         /// <returns></returns>
         public IElementWrapperCollection<IElementWrapper, IBrowserWrapper> FindElements(By selector)
         {
-            return Driver.FindElements(selector).ToElementsList<IElementWrapper, IBrowserWrapper>(this, selector.GetSelector(), TestInstance.TestClass.TestSuiteRunner.ServiceFactory);
+            return Extensions.ToElementsList<IElementWrapper, IBrowserWrapper>(() => Driver.FindElements(selector), this, selector.GetSelector(), _ => selector, TestInstance.TestClass.TestSuiteRunner.ServiceFactory);
         }
 
         /// <summary>
@@ -391,10 +393,14 @@ namespace Riganti.Selenium.Core
         /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
         public IElementWrapperCollection<IElementWrapper, IBrowserWrapper> FindElements(string cssSelector, Func<string, By> tmpSelectMethod = null)
         {
-
-            return Driver.FindElements((tmpSelectMethod ?? SelectMethod)(cssSelector)).ToElementsList<IElementWrapper, IBrowserWrapper>(this, (tmpSelectMethod ?? SelectMethod)(cssSelector).GetSelector(), TestInstance.TestClass.TestSuiteRunner.ServiceFactory);
+            var usedSelectMethod = (tmpSelectMethod ?? SelectMethod);
+            return Extensions.ToElementsList<IElementWrapper, IBrowserWrapper>(() => Driver.FindElements(usedSelectMethod(cssSelector)), this, cssSelector, usedSelectMethod,
+                TestInstance.TestClass.TestSuiteRunner.ServiceFactory);
         }
 
+        /// <summary>
+        /// Returns first element that is found by the selector or returns null.
+        /// </summary>
         /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
 
         public IElementWrapper FirstOrDefault(string selector, Func<string, By> tmpSelectMethod = null)
@@ -403,6 +409,10 @@ namespace Riganti.Selenium.Core
             return elms.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Returns first element that is found by the selector.
+        /// </summary>
+        /// <param name="selector">Defines path to select element.</param>
         /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
 
         public IElementWrapper First(string selector, Func<string, By> tmpSelectMethod = null)
@@ -447,7 +457,6 @@ namespace Riganti.Selenium.Core
             return FindElements(selector, tmpSelectMethod).All(s => s.IsDisplayed());
         }
 
-        /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
 
         ///<summary>Provides elements that satisfies the selector condition at specific position.</summary>
         /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
@@ -486,7 +495,7 @@ namespace Riganti.Selenium.Core
 
         public IBrowserWrapper SendKeys(string selector, string text, Func<string, By> tmpSelectMethod = null)
         {
-            FindElements(selector, tmpSelectMethod).ForEach(s => { s.SendKeys(text); s.Wait(); });
+            FindElements(selector, tmpSelectMethod).ForEach(s => { s.SendKeys(text); });
             return this;
         }
 
@@ -496,7 +505,7 @@ namespace Riganti.Selenium.Core
         /// <param name="tmpSelectMethod">temporary method which determine how the elements are selected</param>
         public IBrowserWrapper ClearElementsContent(string selector, Func<string, By> tmpSelectMethod = null)
         {
-            FindElements(selector, tmpSelectMethod).ForEach(s => { s.Clear(); s.Wait(); });
+            FindElements(selector, tmpSelectMethod).ForEach(s => { s.Clear(); });
             return this;
         }
 
@@ -681,6 +690,29 @@ namespace Riganti.Selenium.Core
             return this;
         }
 
+        public IElementWrapper WaitFor(Func<IBrowserWrapper, IElementWrapper> selector, WaitForOptions options = null)
+        {
+            IElementWrapper wrapper = null;
+            WaitForExecutor.WaitFor(() =>
+            {
+                wrapper = selector(this);
+                if (wrapper is null) throw new ElementNotFoundException();
+            }, options);
+
+            return wrapper;
+        }
+
+        public IElementWrapperCollection<IElementWrapper, IBrowserWrapper> WaitFor(Func<IBrowserWrapper, IElementWrapperCollection<IElementWrapper, IBrowserWrapper>> selector, WaitForOptions options = null)
+        {
+            IElementWrapperCollection<IElementWrapper, IBrowserWrapper> wrappers = null;
+            WaitForExecutor.WaitFor(() =>
+            {
+                wrappers = selector(this);
+                if (wrappers is null) throw new ElementNotFoundException();
+            }, options);
+
+            return wrappers;
+        }
 
         /// <summary>
         /// Transforms relative Url to absolute. Uses base URL.
